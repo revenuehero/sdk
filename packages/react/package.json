@@ -39,13 +39,10 @@
     "react": "^16 || ^17 || ^18",
     "react-dom": "^16 || ^17 || ^18"
   },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/revenuehero/sdk.git"
+    "url": "git+https://github.com/revenuehero/sdk.git",
+    "directory": "packages/react"
   },
   "bugs": {
     "url": "https://github.com/revenuehero/sdk/issues"
