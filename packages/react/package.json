@@ -1,0 +1,42 @@
+{
+  "name": "@revenuehero/sdk-react",
+  "version": "0.1.0",
+  "description": "RevenueHero React SDK",
+  "scripts": {
+    "build": "tsup --entry.index ./src/index.tsx --dts --external react --env.NODE_ENV $NODE_ENV --format esm,cjs --minify",
+    "build:dev": "NODE_ENV=development pnpm build",
+    "build:prod": "NODE_ENV=production pnpm build",
+    "build:stage": "NODE_ENV=staging pnpm build"
+  },
+  "keywords": [
+    "revenuehero",
+    "scheduling"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "author": "RevenueHero Dev<dev@revenuehero.io>",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "react": "^16 || ^17 || ^18",
+    "react-dom": "^16 || ^17 || ^18"
+  }
+}

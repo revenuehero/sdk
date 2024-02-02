@@ -1,0 +1,12 @@
+{
+  "name": "sdk",
+  "version": "1.0.0",
+  "description": "RevenueHero Client SDK",
+  "scripts": {
+    "react:build:prod": "pnpm run --filter @revenuehero/sdk-react build:prod"
+  },
+  "license": "AGPL-3.0",
+  "engines": {
+    "node": ">= 18.12.1"
+  }
+}
