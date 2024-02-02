@@ -1,5 +1,11 @@
 # @revenuehero/sdk-react
 
+## 1.0.3
+
+### Patch Changes
+
+- a833083: Add dist to bundle
+
 ## 1.0.2
 
 ### Patch Changes
