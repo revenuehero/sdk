@@ -5,7 +5,7 @@
   "private": "true",
   "scripts": {
     "react:build:prod": "pnpm run --filter @revenuehero/sdk-react build:prod",
-    "ci:publish": "pnpm publish -r",
+    "ci:publish": "pnpm publish -r --access public",
     "ci:version": "pnpm changeset version",
     "build": "pnpm --filter @revenuehero/* -r build:prod"
   },

@@ -26,7 +26,7 @@
     "dist",
     "package.json"
   ],
-  "author": "RevenueHero Dev<dev@revenuehero.io>",
+  "author": "RevenueHero Dev <dev@revenuehero.io>",
   "license": "AGPL-3.0",
   "devDependencies": {
     "@types/node": "^20.11.16",
@@ -38,5 +38,17 @@
   "peerDependencies": {
     "react": "^16 || ^17 || ^18",
     "react-dom": "^16 || ^17 || ^18"
-  }
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revenuehero/sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/revenuehero/sdk/issues"
+  },
+  "homepage": "https://github.com/revenuehero/sdk#readme"
 }
