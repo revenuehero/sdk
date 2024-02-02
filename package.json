@@ -3,10 +3,16 @@
   "version": "1.0.0",
   "description": "RevenueHero Client SDK",
   "scripts": {
-    "react:build:prod": "pnpm run --filter @revenuehero/sdk-react build:prod"
+    "react:build:prod": "pnpm run --filter @revenuehero/sdk-react build:prod",
+    "ci:publish": "pnpm publish -r",
+    "ci:version": "pnpm changeset version",
+    "build": "pnpm --filter @revenuehero/* -r build:prod"
   },
   "license": "AGPL-3.0",
   "engines": {
     "node": ">= 18.12.1"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1"
   }
 }
