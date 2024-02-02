@@ -1,5 +1,6 @@
-import { useEffect } from "react";
-import { type ISchedulerFormSession } from "./types";
+import { memo, useEffect } from "react";
+
+export type TCustomFormTypes = "pardot" | "jotForm";
 
 export interface IRevenueHeroParams {
   /**
@@ -18,7 +19,7 @@ export interface IRevenueHeroParams {
   greetingText?: string;
 
   /**
-   * Locale for the RevenueHero component.
+   * Locale for the RevenueHero Scheduler.
    */
   locale?: string;
 
@@ -28,29 +29,31 @@ export interface IRevenueHeroParams {
   showLoader?: boolean;
 }
 
-export type TCustomFormTypes = "pardot" | "jotForm";
-
 /**
  * Props for the RevenueHero component.
  */
 export interface IRevenueHeroProps extends IRevenueHeroParams {
   /**
-   * Callback function called when the RevenueHero component is loaded.
-   * @param revenueHero - The loaded RevenueHero instance.
-   */
-  onLoad: (revenueHero: RevenueHeroClient) => void;
-
-  /**
-   * The ID of this RevenueHero instance.
-   */
-  id: string;
-
-  /**
    * Whether or not to enable the RevenueHero component.
    * Once enabled, the script will be loaded and the onLoad callback will be called.
    * It cannot be disabled after enabling.
    */
-  enabled: boolean;
+  enabled?: boolean;
+
+  /**
+   * The target element ID where the scheduler will be embedded.
+   */
+  embedTarget?: string;
+
+  /**
+   * The ID of the form.
+   */
+  formId: string;
+
+  /**
+   * Callback function called when the RevenueHero component is loaded.
+   */
+  onLoad?: () => void;
 }
 
 /**
@@ -58,15 +61,7 @@ export interface IRevenueHeroProps extends IRevenueHeroParams {
  */
 interface RevenueHeroClient {
   prototype: RevenueHeroClient;
-  // eslint-disable-next-line @typescript-eslint/no-misused-new
   new (params: IRevenueHeroParams): RevenueHeroClient;
-
-  /**
-   * Submit and open the scheduler.
-   * @param data - The data to submit.
-   * @returns A promise that resolves to the scheduler form session or null.
-   */
-  submit: (data: Record<string, any>) => Promise<ISchedulerFormSession | null>;
 
   /**
    * Schedule a form.
@@ -85,38 +80,10 @@ declare global {
 const isBrowser =
   typeof window !== "undefined" && typeof document !== "undefined";
 
-let loadPromise: Promise<void> | null = null;
-
-const LoadCache = new Set<string>();
-
-function loadScript({
-  onLoad,
-  id = "rh-script",
-  ...params
-}: IRevenueHeroProps): void {
-  const hasLoadedScript =
-    document.querySelector(`script[data-rh-script]`) !== null;
-
-  function handleScriptLoad(): void {
-    const hero = new window.RevenueHero(params);
-    onLoad?.(hero);
-    LoadCache.add(id);
-  }
-
-  /**
-   * if script has already been loaded and the onLoad callback has not been called yet
-   */
-  if (hasLoadedScript && loadPromise !== null) {
-    if (!LoadCache.has(id)) {
-      void loadPromise.then(handleScriptLoad);
-    }
-
-    return;
-  }
-
+function loadScript(): Promise<void> {
   const el = document.createElement("script");
 
-  loadPromise = new Promise<void>((resolve, reject) => {
+  const promise = new Promise<void>((resolve, reject) => {
     el.addEventListener("load", () => {
       resolve();
     });
@@ -124,30 +91,54 @@ function loadScript({
     el.addEventListener("error", (e) => {
       reject(e);
     });
-  })
-    .then(handleScriptLoad)
-    .catch((e) => {
-      console.error("[RevenueHero Error]:", e);
-    });
+  });
 
-  el.src =
-    process.env.NODE_ENV === "production"
-      ? "https://app.revenuehero.io/scheduler.min.js"
-      : process.env.NODE_ENV === "staging"
-      ? "https://app.aysr.io/scheduler.min.js"
-      : "http://localhost:4200/scheduler.min.js";
-
-  el.setAttribute("data-rh-script", "");
+  el.src = "https://app.revenuehero.io/scheduler.min.js";
 
   document.body.appendChild(el);
+
+  return promise;
 }
 
-export function RevenueHero(props: IRevenueHeroProps): JSX.Element | null {
-  useEffect(() => {
-    if (!isBrowser || !props.enabled) return;
+/**
+ * ! Why this promise is hoisted ?
+ * - when multiple RevenueHero components are mounted at the same time, the script is loaded only once.
+ * - the promise is hoisted to wait till script is loaded and then call the init function.
+ */
+let loadPromise: Promise<void> | null = null;
 
-    loadScript(props);
-  }, [props]);
+export const RevenueHero = memo(
+  ({
+    enabled,
+    embedTarget,
+    formId,
+    onLoad,
+    ...props
+  }: IRevenueHeroProps): JSX.Element | null => {
+    useEffect(() => {
+      const init = () => {
+        const RevenueHero = window.RevenueHero;
 
-  return null;
-}
+        if (!RevenueHero) {
+          throw new Error("RevenueHero is not available");
+        }
+
+        const instance = new RevenueHero(props);
+
+        instance.schedule(formId, embedTarget);
+
+        onLoad?.();
+      };
+
+      if (!isBrowser || !enabled) return;
+
+      if (loadPromise === null) {
+        loadPromise = loadScript();
+      }
+
+      loadPromise.then(init);
+    }, [embedTarget, enabled, formId, onLoad, props]);
+
+    return null;
+  },
+);
