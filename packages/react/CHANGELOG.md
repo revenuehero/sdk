@@ -1,5 +1,11 @@
 # @revenuehero/sdk-react
 
+## 1.0.4
+
+### Patch Changes
+
+- e35ba7d: Reworked the component to make it simpler
+
 ## 1.0.3
 
 ### Patch Changes
