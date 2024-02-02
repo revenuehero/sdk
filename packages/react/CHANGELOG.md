@@ -1,5 +1,11 @@
 # @revenuehero/sdk-react
 
+## 1.0.2
+
+### Patch Changes
+
+- d02a65d: Added changeset to help with release
+
 ## 1.0.1
 
 ### Patch Changes
