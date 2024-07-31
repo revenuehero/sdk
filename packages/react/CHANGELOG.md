@@ -1,5 +1,11 @@
 # @revenuehero/sdk-react
 
+## 1.1.0
+
+### Minor Changes
+
+- 095006c: reset global state of marketing snippet when component unmounts
+
 ## 1.0.5
 
 ### Patch Changes
