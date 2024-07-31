@@ -77,6 +77,14 @@ declare global {
   }
 }
 
+const RH_GLOBAL_STORAGE_KEYS = [
+  "RH_EMBED_TARGET",
+  "RH_DATA_SOURCE",
+  "RH_SESSION_ID",
+  "RH_ROUTER_ID",
+  "RH_FORM_SUBMITTED",
+];
+
 const isBrowser =
   typeof window !== "undefined" && typeof document !== "undefined";
 
@@ -137,8 +145,20 @@ export const RevenueHero = memo(
       }
 
       loadPromise.then(init);
+
+      // reset global state when parent component unmounts
+      return () => {
+        if (window.RevenueHero === undefined) return;
+
+        // @ts-expect-error formsConnected is static property on RevenueHero constructor
+        window.RevenueHero.formsConnected = [];
+
+        RH_GLOBAL_STORAGE_KEYS.forEach((key) => {
+          localStorage.removeItem(key);
+        });
+      };
     }, [embedTarget, enabled, formId, onLoad, props]);
 
     return null;
-  },
+  }
 );
