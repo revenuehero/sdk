@@ -47,8 +47,9 @@ export interface IRevenueHeroProps extends IRevenueHeroParams {
 
   /**
    * The ID of the form.
+   * auto schedules when form selector is provided
    */
-  formId: string;
+  formId?: string;
 
   /**
    * Callback function called when the RevenueHero component is loaded.
@@ -101,7 +102,7 @@ function loadScript(): Promise<void> {
     });
   });
 
-  el.src = "https://app.revenuehero.io/scheduler.min.js";
+  el.src = "https://assets.revenuehero.io/scheduler.min.js";
 
   document.body.appendChild(el);
 
@@ -131,9 +132,11 @@ export const RevenueHero = memo(
           throw new Error("RevenueHero is not available");
         }
 
-        const instance = new RevenueHero(props);
+        if (formId) {
+          const instance = new RevenueHero(props);
 
-        instance.schedule(formId, embedTarget);
+          instance.schedule(formId, embedTarget);
+        }
 
         onLoad?.();
       };
