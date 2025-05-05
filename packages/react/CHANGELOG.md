@@ -1,5 +1,11 @@
 # @revenuehero/sdk-react
 
+## 1.2.0
+
+### Minor Changes
+
+- cff7b9e: updated script url and made formId optional for scheduling
+
 ## 1.1.0
 
 ### Minor Changes
