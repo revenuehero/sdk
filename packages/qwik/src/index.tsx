@@ -1,4 +1,4 @@
-import { component$, useVisibleTask$, $ } from '@builder.io/qwik';
+import { component$, useVisibleTask$, useSignal, $ } from '@builder.io/qwik';
 
 export type TCustomFormTypes = "pardot" | "jotForm";
 
@@ -67,6 +67,18 @@ interface RevenueHeroInstance {
    * @param embedTarget - The ID of the element to embed the scheduler into.
    */
   schedule: (formId: string, embedTarget?: string) => void;
+  
+  /**
+   * Submit form data directly to RevenueHero
+   */
+  submit: (data: Record<string, any>) => Promise<any>;
+  
+  /**
+   * Dialog instance for opening the scheduler
+   */
+  dialog: {
+    open: (response: any) => void;
+  };
 }
 
 /**
@@ -187,3 +199,64 @@ export const RevenueHero = component$<IRevenueHeroProps>((props) => {
 
   return null;
 });
+
+/**
+ * Hook for manual RevenueHero submission in Qwik forms
+ * 
+ * @example
+ * ```tsx
+ * export default component$(() => {
+ *   const submitToRH = useRevenueHero({ routerId: 'your-router-id' });
+ * 
+ *   const handleSubmit = $((event: SubmitEvent, form: HTMLFormElement) => {
+ *     // Your form logic here
+ *     const formData = new FormData(form);
+ *     const data = Object.fromEntries(formData.entries());
+ *     
+ *     // Submit to RevenueHero
+ *     submitToRH(data);
+ *   });
+ * 
+ *   return (
+ *     <form preventdefault:submit onSubmit$={handleSubmit}>
+ *       <input name="email" type="email" />
+ *       <button type="submit">Submit</button>
+ *     </form>
+ *   );
+ * });
+ * ```
+ */
+export const useRevenueHero = (params: IRevenueHeroParams) => {
+  const isLoaded = useSignal(false);
+
+  // Ensure script is loaded when hook is used
+  useVisibleTask$(() => {
+    if (scriptLoader.loadPromise === null) {
+      scriptLoader.loadPromise = loadScript();
+    }
+
+    scriptLoader.loadPromise
+      .then(() => {
+        isLoaded.value = true;
+      })
+      .catch(() => {
+        console.error('[RevenueHero] Failed to load script');
+      });
+  });
+
+  return $((formData: Record<string, any>) => {
+    if (!isLoaded.value || typeof window.RevenueHero === 'undefined') {
+      console.error('[RevenueHero] Script not loaded yet');
+      return Promise.reject(new Error('RevenueHero not loaded'));
+    }
+
+    const instance = new window.RevenueHero(params);
+    
+    return instance.submit(formData).then((response: any) => {
+      if (response) {
+        instance.dialog.open(response);
+      }
+      return response;
+    });
+  });
+};
