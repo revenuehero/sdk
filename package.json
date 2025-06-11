@@ -5,6 +5,7 @@
   "private": "true",
   "scripts": {
     "react:build:prod": "pnpm run --filter @revenuehero/sdk-react build:prod",
+    "qwik:build:prod": "pnpm run --filter @revenuehero/sdk-qwik build:prod",
     "ci:publish": "pnpm run build && pnpm publish -r --access public",
     "ci:version": "pnpm changeset version",
     "build": "pnpm --filter @revenuehero/* -r build:prod"

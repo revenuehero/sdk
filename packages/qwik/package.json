@@ -1,0 +1,55 @@
+{
+  "name": "@revenuehero/sdk-qwik",
+  "version": "1.0.0",
+  "description": "RevenueHero Qwik SDK",
+  "scripts": {
+    "build": "qwik build",
+    "build.lib": "vite build --mode lib",
+    "build.types": "tsc --emitDeclarationOnly",
+    "build:dev": "NODE_ENV=development pnpm build.lib && pnpm build.types",
+    "build:prod": "NODE_ENV=production pnpm build.lib && pnpm build.types",
+    "build:stage": "NODE_ENV=staging pnpm build.lib && pnpm build.types",
+    "qwik": "qwik"
+  },
+  "keywords": [
+    "revenuehero",
+    "scheduling",
+    "qwik"
+  ],
+  "main": "./lib/index.qwik.mjs",
+  "qwik": "./lib/index.qwik.mjs",
+  "types": "./lib-types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.qwik.mjs",
+      "require": "./lib/index.qwik.cjs",
+      "types": "./lib-types/index.d.ts"
+    }
+  },
+  "files": [
+    "lib",
+    "lib-types"
+  ],
+  "type": "module",
+  "author": "RevenueHero Dev <dev@revenuehero.io>",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "@builder.io/qwik": "^1.5.0",
+    "@types/node": "^20.11.16",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0",
+    "vite-tsconfig-paths": "^4.2.1"
+  },
+  "peerDependencies": {
+    "@builder.io/qwik": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revenuehero/sdk.git",
+    "directory": "packages/qwik"
+  },
+  "bugs": {
+    "url": "https://github.com/revenuehero/sdk/issues"
+  },
+  "homepage": "https://github.com/revenuehero/sdk#readme"
+}
