@@ -1,4 +1,4 @@
-import { component$, $, useVisibleTask$ } from "@builder.io/qwik";
+import { component$, $, useVisibleTask$, useSignal } from "@builder.io/qwik";
 const RH_GLOBAL_STORAGE_KEYS = [
   "RH_EMBED_TARGET",
   "RH_DATA_SOURCE",
@@ -67,6 +67,33 @@ const RevenueHero = component$((props) => {
   });
   return null;
 });
+const useRevenueHero = (params) => {
+  const isLoaded = useSignal(false);
+  useVisibleTask$(() => {
+    if (scriptLoader.loadPromise === null) {
+      scriptLoader.loadPromise = loadScript();
+    }
+    scriptLoader.loadPromise.then(() => {
+      isLoaded.value = true;
+    }).catch(() => {
+      console.error("[RevenueHero] Failed to load script");
+    });
+  });
+  return $((formData) => {
+    if (!isLoaded.value || typeof window.RevenueHero === "undefined") {
+      console.error("[RevenueHero] Script not loaded yet");
+      return Promise.reject(new Error("RevenueHero not loaded"));
+    }
+    const instance = new window.RevenueHero(params);
+    return instance.submit(formData).then((response) => {
+      if (response) {
+        instance.dialog.open(response);
+      }
+      return response;
+    });
+  });
+};
 export {
-  RevenueHero
+  RevenueHero,
+  useRevenueHero
 };
