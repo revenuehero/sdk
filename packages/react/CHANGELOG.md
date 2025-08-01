@@ -1,5 +1,11 @@
 # @revenuehero/sdk-react
 
+## 2.0.0
+
+### Major Changes
+
+- 88754c7: Added support for react 19
+
 ## 1.2.0
 
 ### Minor Changes
