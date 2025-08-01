@@ -1,6 +1,6 @@
 {
   "name": "@revenuehero/sdk-react",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "RevenueHero React SDK",
   "scripts": {
     "build": "tsup --entry.index ./src/index.tsx --dts --external react --env.NODE_ENV $NODE_ENV --format esm,cjs --minify",
