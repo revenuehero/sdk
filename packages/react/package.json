@@ -36,8 +36,8 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "react": "^16 || ^17 || ^18",
-    "react-dom": "^16 || ^17 || ^18"
+    "react": "^16 || ^17 || ^18 || ^19",
+    "react-dom": "^16 || ^17 || ^18 || ^19"
   },
   "repository": {
     "type": "git",
